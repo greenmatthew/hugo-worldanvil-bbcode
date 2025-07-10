@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ .Title }}</title>
+</head>
+<body>
+
+<h1>{{ .Title }}</h1>
+
+{{/* Create a custom sort key that uses directory name for _index files */}}
+{{- $pages := .Pages -}}
+{{- $sortedPages := slice -}}
+
+{{- $pagesWithFiles := where .Pages ".File" "!=" nil -}}
+{{- range $pagesWithFiles -}}
+    {{- $sortKey := "" -}}
+    {{- if eq .File.BaseFileName "_index" -}}
+    {{/* For _index files, use the parent directory name */}}
+    {{- $sortKey = path.Base .File.Dir -}}
+    {{- else -}}
+    {{/* For regular files, use the filename */}}
+    {{- $sortKey = .File.BaseFileName -}}
+    {{- end -}}
+    
+    {{- $sortedPages = $sortedPages | append (dict "page" . "sortKey" $sortKey) -}}
+{{- end -}}
+
+{{/* Sort by the custom sort key */}}
+{{- range sort $sortedPages "sortKey" -}}
+    <h2><a href="{{ .page.Permalink }}">{{ .page.Title }}</a></h2>
+    {{ .page.Content }}
+{{- end -}}
+
+</body>
+</html>

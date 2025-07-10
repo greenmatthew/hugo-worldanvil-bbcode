@@ -1,0 +1,66 @@
+{{- /* layouts/partials/html-to-bbcode.html */ -}}
+{{- /* 
+Partial: html-to-bbcode
+
+Parameters (passed as a dictionary):
+  content (string): The HTML content to convert to BBCode
+  
+Usage:
+  {{ partial "html-to-bbcode" (dict "content" .Content) }}
+  
+Description:
+  Converts HTML content to WorldAnvil flavored BBCode format.
+  Handles block elements, inline elements, lists, and spoilers.
+*/ -}}
+
+{{- $content := .content -}}
+
+{{- /* Step 1: Decode HTML entities FIRST */ -}}
+{{- $content = $content | replaceRE `&rsquo;` "'" -}}
+{{- $content = $content | replaceRE `&lsquo;` "'" -}}
+{{- $content = $content | replaceRE `&rdquo;` "\"" -}}
+{{- $content = $content | replaceRE `&ldquo;` "\"" -}}
+{{- $content = $content | replaceRE `&amp;` `&` -}}
+{{- $content = $content | replaceRE `&lt;` `<` -}}
+{{- $content = $content | replaceRE `&gt;` `>` -}}
+{{- $content = $content | replaceRE `&nbsp;` " " -}}
+{{- $content = $content | replaceRE `&quot;` "\"" -}}
+{{- /* " to fix linting */ -}}
+
+{{- /* Step 2: Convert inline elements FIRST (before block elements) */ -}}
+{{- $content = $content | replaceRE `<strong[^>]*>(.*?)</strong>` `[b]$1[/b]` -}}
+{{- $content = $content | replaceRE `<b[^>]*>(.*?)</b>` `[b]$1[/b]` -}}
+{{- $content = $content | replaceRE `<em[^>]*>(.*?)</em>` `[i]$1[/i]` -}}
+{{- $content = $content | replaceRE `<i[^>]*>(.*?)</i>` `[i]$1[/i]` -}}
+{{- $content = $content | replaceRE `<u[^>]*>(.*?)</u>` `[u]$1[/u]` -}}
+{{- $content = $content | replaceRE `<s[^>]*>(.*?)</s>` `[s]$1[/s]` -}}
+{{- $content = $content | replaceRE `<strike[^>]*>(.*?)</strike>` `[s]$1[/s]` -}}
+{{- $content = $content | replaceRE `<del[^>]*>(.*?)</del>` `[s]$1[/s]` -}}
+{{- $content = $content | replaceRE `<code[^>]*>(.*?)</code>` `[code]$1[/code]` -}}
+
+{{- /* Step 3: Normalize whitespace around block elements */ -}}
+{{- /* Remove excessive whitespace but preserve content structure */ -}}
+{{- $content = $content | replaceRE `\s*<(h[1-6]|p|div|ul|ol|li|details)([^>]*)>\s*` `<$1$2>` -}}
+{{- $content = $content | replaceRE `\s*</(h[1-6]|p|div|ul|ol|li|details)>\s*` `</$1>` -}}
+
+{{- /* Step 4: Convert headers */ -}}
+{{- $content = $content | replaceRE `<h1[^>]*>(.*?)</h1>` (printf `[h1]$1[/h1]%s` "\n") -}}
+{{- $content = $content | replaceRE `<h2[^>]*>(.*?)</h2>` (printf `[h2]$1[/h2]%s` "\n") -}}
+{{- $content = $content | replaceRE `<h3[^>]*>(.*?)</h3>` (printf `[h3]$1[/h3]%s` "\n") -}}
+{{- $content = $content | replaceRE `<h4[^>]*>(.*?)</h4>` (printf `[h4]$1[/h4]%s` "\n") -}}
+{{- $content = $content | replaceRE `<h5[^>]*>(.*?)</h5>` (printf `[h5]$1[/h5]%s` "\n") -}}
+{{- $content = $content | replaceRE `<h6[^>]*>(.*?)</h6>` (printf `[h6]$1[/h6]%s` "\n") -}}
+
+{{- /* Step 5: Convert paragraphs */ -}}
+{{- $content = $content | replaceRE `<p[^>]*>(.*?)</p>` (printf `[p]$1[/p]%s` "\n") -}}
+
+{{- /* Step 6: Convert lists */ -}}
+{{- $content = $content | replaceRE `<ul[^>]*>(.*?)</ul>` (printf `[ul]$1[/ul]%s` "\n") -}}
+{{- $content = $content | replaceRE `<ol[^>]*>(.*?)</ol>` (printf `[ol]$1[/ol]%s` "\n") -}}
+{{- $content = $content | replaceRE `<li[^>]*>(.*?)</li>` (printf `[li]$1[/li]`) -}}
+
+{{- /* Step 7: Convert spoilers */ -}}
+{{- $content = $content | replaceRE `(?s)<details[^>]*><summary[^>]*>(.*?)</summary>(.*?)</details>` (printf `[spoiler]%s$2| $1 [/spoiler]%s` "\n" "\n\n") -}}
+
+{{- /* Return the converted content */ -}}
+{{- $content | safeHTML -}}

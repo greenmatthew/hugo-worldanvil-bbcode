@@ -1,0 +1,2 @@
+<!-- layouts/shortcodes/spoiler.html -->
+{{ partial "spoiler" (dict "title" (.Get "title") "content" (.Inner | markdownify)) }}

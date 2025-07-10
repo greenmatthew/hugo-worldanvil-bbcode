@@ -1,0 +1,22 @@
+{{- /* layouts/partials/spoiler.html */ -}}
+{{- /* 
+Partial: spoiler
+
+Parameters (passed as a dictionary):
+  title (string): The summary/title text for the spoiler
+  content (string): The content to wrap in the spoiler
+  
+Usage:
+  {{ partial "spoiler" (dict "title" "Click to expand" "content" "<p>Hidden content</p>") }}
+  
+Description:
+  Creates a collapsible spoiler/details element with the given title and content.
+*/ -}}
+
+{{- $title := .title -}}
+{{- $content := .content -}}
+
+<details>
+<summary>{{ $title }}</summary>
+{{ $content | safeHTML }}
+</details>

@@ -1,0 +1,21 @@
+baseURL = 'http://localhost'
+languageCode = 'en-us'
+title = 'D&D Documents'
+
+[mediaTypes]
+  [mediaTypes.'text/bbcode']
+    suffixes = ['bb']
+
+[outputFormats]
+  [outputFormats.bb]
+    mediaType = "text/bbcode"
+    isPlainText = true
+    isHTML = false
+    name = "bbcode"
+    path = "bbcode"
+    extension = "bb"
+
+[outputs]
+  home = ["html"]
+  page = ["html", "bb"]
+  section = ['html', 'bb']
