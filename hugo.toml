@@ -12,7 +12,6 @@ title = 'D&D Documents'
     isPlainText = true
     isHTML = false
     name = "bbcode"
-    path = "bbcode"
     extension = "bb"
 
 [outputs]
