@@ -1,20 +1,26 @@
 +++
-date = '2025-06-29T12:12:00-05:00'
-draft = true
-title = 'Test'
+title = 'Header 1'
 +++
 
-## Introduction
+## Header 2
+
+### Header 3
+
+#### Header 4
+
+##### Header 5
 
 This is a **bold** paragraph with some *italic* text.
 
-### Subsection
-
 Another paragraph here.
 
-- Test 1
-- Test 2
-- Test 3
+- Unordered List Item 1
+- Unordered List Item 2
+- Unordered List Item 3
+
+1. **Ordered List Item 1**
+2. Ordered List Item 2
+3. *Ordered List Item 3*
 
 {{< spoiler title="Spoiler Summary" >}}
 
@@ -22,10 +28,17 @@ Another paragraph here.
 
 Inside spoiler paragraph.
 
+<!--
+  Where
+  did
+  all
+  this
+  whitespace
+  go?
+-->
+
 - **Inside Spoiler list item BOLDED** and not bolded
 - Inside Spoiler list item
 - **Inside Spoiler list item BOLDED**
 
 {{< /spoiler >}}
-
-#### Header 4
